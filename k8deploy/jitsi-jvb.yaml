@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jitsi-jvb
+  namespace: jitsi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jitsi-jvb
+  template:
+    metadata:
+      labels:
+        app: jitsi-jvb
+    spec:
+      containers:
+        - name: jvb
+          image: 17082002/jitsi_meet_app:jvb
+          ports:
+            - containerPort: 10000
+              protocol: UDP
+            - containerPort: 4443
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: jitsi-secret-env
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jitsi-jvb
+  namespace: jitsi
+spec:
+  selector:
+    app: jitsi-jvb
+  ports:
+    - name: udp-media
+      port: 10000
+      protocol: UDP
+      targetPort: 10000
+    - name: tcp-media
+      port: 4443
+      protocol: TCP
+      targetPort: 4443
+

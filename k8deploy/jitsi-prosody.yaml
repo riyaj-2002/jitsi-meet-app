@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jitsi-prosody
+  namespace: jitsi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jitsi-prosody
+  template:
+    metadata:
+      labels:
+        app: jitsi-prosody
+    spec:
+      containers:
+        - name: prosody
+          image: 17082002/jitsi_meet_app:prosody
+          ports:
+            - containerPort: 5222
+            - containerPort: 5280
+          envFrom:
+            - secretRef:
+                name: jitsi-secret-env
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jitsi-prosody
+  namespace: jitsi
+spec:
+  selector:
+    app: jitsi-prosody
+  ports:
+    - port: 5222
+      name: xmpp
+      targetPort: 5222
+    - port: 5280
+      name: bosh
+      targetPort: 5280
+

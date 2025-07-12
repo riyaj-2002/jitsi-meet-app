@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jitsi-web
+  namespace: jitsi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jitsi-web
+  template:
+    metadata:
+      labels:
+        app: jitsi-web
+    spec:
+      containers:
+        - name: web
+          image: 17082002/jitsi_meet_app:web
+          ports:
+            - containerPort: 80
+            - containerPort: 443
+          envFrom:
+            - secretRef:
+                name: jitsi-secret-env
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jitsi-web
+  namespace: jitsi
+spec:
+  type: LoadBalancer
+  selector:
+    app: jitsi-web
+  ports:
+    - port: 80
+      targetPort: 80
+      name: http
+    - port: 443
+      targetPort: 443
+      name: https
+
