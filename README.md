@@ -38,5 +38,50 @@
    - **SUBNET:** pub-sub-project
    - **SECURITY GROUP:** SSH (port 22) , HTTP (port 80) , HTTPS (port 443)
 
+## 🚀 Deployment Instructions
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/riyaj-2002/jitsi-meet-app.git
+cd jitsi-meet-app
+```
+
+### 2. Create Namespace
+```bash
+kubectl create namespace jitsi
+```
+
+### 3. Prepare Environment Variables
+### Create a .env file based on your setup:
+
+```bash
+CONFIG=/home/ubuntu/.jitsi-meet-cfg
+HTTP_PORT=8000
+HTTPS_PORT=8443
+TZ=Asia/Kolkata
+PUBLIC_URL=https://<your-server-ip>:8443
+JVB_ADVERTISE_IPS=<your-server-ip>
+```
+
+### 4. Create Kubernetes Secret
+```bash
+kubectl create secret generic jitsi-secret-env --from-env-file=.env -n jitsi
+```
+
+### 5. Deploy All Services
+```bash
+kubectl apply -f jitsi-prosody.yaml -n jitsi
+kubectl apply -f jitsi-jicofo.yaml -n jitsi
+kubectl apply -f jitsi-jvb.yaml -n jitsi
+kubectl apply -f jitsi-web.yaml -n jitsi
+```
+
+
+## 🌐 Access the App
+### Open in browser:
+```bash
+https://<external-ip>
+```
+
 
      
