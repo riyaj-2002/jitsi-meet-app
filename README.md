@@ -83,5 +83,10 @@ kubectl apply -f jitsi-web.yaml -n jitsi
 https://<external-ip>
 ```
 
+## Updating
+### If you want to update, simply run (Finds the latest release of docker-jitsi-meet on GitHub)
+```bash
+wget $(curl -s https://api.github.com/repos/jitsi/docker-jitsi-meet/releases/latest | grep 'zip' | cut -d\" -f4)
+```
 
      
