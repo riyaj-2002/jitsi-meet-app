@@ -46,29 +46,28 @@ git clone https://github.com/riyaj-2002/jitsi-meet-app.git
 cd jitsi-meet-app
 ```
 
-### 2. Create Namespace
+### 3. Create Kubernetes Secret
 ```bash
-kubectl create namespace jitsi
+kubectl create secret generic jitsi-secret-env -n jitsi \
+  --from-literal=PUBLIC_URL=http://<YOUR_PUBLIC_IP> \
+  --from-literal=HTTP_PORT=80 \
+  --from-literal=HTTPS_PORT=443 \
+  --from-literal=TZ=UTC \
+  --from-literal=XMPP_DOMAIN=jitsi-prosody \
+  --from-literal=XMPP_AUTH_DOMAIN=auth.jitsi-prosody \
+  --from-literal=XMPP_INTERNAL_MUC_DOMAIN=internal-muc.jitsi-prosody \
+  --from-literal=XMPP_MUC_DOMAIN=muc.jitsi-prosody \
+  --from-literal=XMPP_SERVER=jitsi-prosody \
+  --from-literal=JICOFO_AUTH_USER=focus \
+  --from-literal=JICOFO_AUTH_PASSWORD=focuspassword \
+  --from-literal=JVB_AUTH_USER=jvb \
+  --from-literal=JVB_AUTH_PASSWORD=jvbpassword \
+  --from-literal=JVB_BREWERY_MUC=jvbbrewery \
+  --from-literal=JVB_ADVERTISE_IPS=<YOUR_PUBLIC_IP> \
+  --from-literal=DOCKER_HOST_ADDRESS=<YOUR_PUBLIC_IP>
 ```
 
-### 3. Prepare Environment Variables
-### Create a .env file based on your setup:
-
-```bash
-CONFIG=/home/ubuntu/.jitsi-meet-cfg
-HTTP_PORT=8000
-HTTPS_PORT=8443
-TZ=Asia/Kolkata
-PUBLIC_URL=https://<your-server-ip>:8443
-JVB_ADVERTISE_IPS=<your-server-ip>
-```
-
-### 4. Create Kubernetes Secret
-```bash
-kubectl create secret generic jitsi-secret-env --from-env-file=.env -n jitsi
-```
-
-### 5. Deploy All Services
+### 4. Deploy All Services
 ```bash
 kubectl apply -f jitsi-prosody.yaml -n jitsi
 kubectl apply -f jitsi-jicofo.yaml -n jitsi
